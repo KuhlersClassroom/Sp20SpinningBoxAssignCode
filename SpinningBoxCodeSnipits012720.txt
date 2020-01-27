@@ -1,0 +1,103 @@
+-- Code for Class Monday, January 27th
+
+-- 1. Place code in index.html
+<a-entity camera 
+                look-controls
+                id="camera"
+                position="0 1.5 0"
+                rotation="0 0 0">
+        
+        <a-entity raycaster 
+                  objects: .clickable>
+        </a-entity>
+        
+</a-entity>
+
+-- 2. Create a new file
+-- js/lookingAtBox.js
+
+/* global AFRAME */
+
+AFRAME.registerComponent('looking-at-box', {
+ dependencies: ['raycaster'],
+
+ init: function () {
+   this.el.addEventListener('raycaster-intersected', this.intersected.bind(this))
+ },
+
+ intersected: function () {
+   console.log('Raycaster hit the box!');
+ }
+
+});
+
+-- 3. add script to include new file from #2
+<script src="js/lookingAtBox.js"></script>
+
+-- 4. add code to js/constants.js file
+const BOX_NOT_SELECTED_COLOR = 'blue';
+const BOX_SELECTED_COLOR = 'yellow';
+
+-- 5. add code to js/lookingAtBox.js file
+-- at top after AFRAME, add:
+, BOX_SELECTED_COLOR 
+
+-- 6. same file
+-- in the intersected function add
+   let material = this.el.getAttribute('material')
+   material.color = BOX_SELECTED_COLOR
+   this.el.setAttribute('material', material)
+
+-- 7. same file delete console.log addEventListener
+
+-- 8. Create a new file
+-- js/notLookingAtBox.js
+Use code from #2 and update
+
+-- 9. Add in reticle
+-- add code inside of cursor entity
+<a-entity cursor
+                  position="0 0 -4"
+                  geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+                  material="color: red; shader: flat">
+        </a-entity>
+
+-- 10. Create new file
+-- js/clickOnBox.js
+/* global AFRAME */
+
+AFRAME.registerComponent('click-on-box', {
+
+  init: function () {
+    this.el.addEventListener('click', this.boxClicked.bind(this));
+  },
+
+  boxClicked: function() {
+    console.log('I was clicked');
+  }
+});
+
+-- 11. add component to box entity 
+-- and add the appropriate script
+
+-- 12. reposition the box after clicked
+-- add code to js/clickOnBox.js 
+-- replace console.log line with below
+-- starting at line 8
+getRn(min, max) {
+    return parseInt(Math.random() * (max-min) + min, 10)
+  },
+  
+  boxClicked: function(evt) {
+    let position = this.el.getAttribute('position')
+    position.x = this.getRn(-10, 10);
+    position.y = this.getRn(1, 10);
+    this.el.setAttribute('position', position);
+  }
+});
+
+Now should work!!!!
+
+
+
+
